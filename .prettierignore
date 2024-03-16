@@ -1,0 +1,15 @@
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+**/.next
+**/.nuxt
+**/.output
+**/dist
+**/functions/*.js
+**/functions/*.js.map
+.wrangler/*
+**/coverage
+.yarn
+pnpm-lock.yaml
+CHANGELOG.md
