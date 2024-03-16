@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { HTTPException } from 'hono/http-exception';
 import { type Env } from '~/index';
+import { transactionalRouter } from './transactional';
 
 export const app = new Hono<{ Bindings: Env }>();
 
@@ -16,6 +17,7 @@ app.use('*', cors());
 
 // minimal health check routes
 app.get('/ping', (c) => c.text('pong'));
+app.route('/transactional', transactionalRouter);
 
 app.get('/', (c) => {
   return c.html(
