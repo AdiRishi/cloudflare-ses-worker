@@ -1,12 +1,11 @@
-import { SESClient, SendEmailCommand, type SendEmailCommandInput } from '@aws-sdk/client-ses';
+import { SendEmailCommand, type SendEmailCommandInput } from '@aws-sdk/client-ses';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
+import { getSesClient } from '~/aws-sdk/ses-client';
 import { Env } from '~/index';
 
 export const transactionalRouter = new Hono<{ Bindings: Env }>();
-
-const client = new SESClient({ region: 'ap-southeast-2' });
 
 transactionalRouter.post(
   '/send',
@@ -31,6 +30,7 @@ transactionalRouter.post(
   async (c) => {
     const data = c.req.valid('json');
 
+    const client = getSesClient(c.env);
     const input: SendEmailCommandInput = {
       Source: data.from,
       Destination: {

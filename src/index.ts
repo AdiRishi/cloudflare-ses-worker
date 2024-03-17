@@ -2,6 +2,8 @@ import { app } from './routes';
 
 export type Env = {
   ENVIRONMENT: 'production' | 'development' | 'testing';
+  AWS_ACCESS_KEY_ID: string;
+  AWS_SECRET_ACCESS_KEY: string;
 };
 
 export default {

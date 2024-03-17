@@ -201,6 +201,7 @@ dist
 # wrangler project
 
 .wrangler/
+.dev.vars
 
 # turborepo
 .turbo
