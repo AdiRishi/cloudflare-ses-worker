@@ -1,8 +1,7 @@
-import { SendEmailCommand, type SendEmailCommandInput } from '@aws-sdk/client-ses';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { getSesClient } from '~/aws-sdk/ses-client';
+import { sendEmail } from '~/aws-sdk/ses-client';
 import { Env } from '~/index';
 
 export const transactionalRouter = new Hono<{ Bindings: Env }>();
@@ -14,6 +13,7 @@ transactionalRouter.post(
     z.object({
       to: z.array(z.string().email()),
       from: z.string().email(),
+      replyToAddresses: z.array(z.string().email()).optional(),
       subject: z.string(),
       body: z
         .object({
@@ -30,31 +30,32 @@ transactionalRouter.post(
   async (c) => {
     const data = c.req.valid('json');
 
-    const client = getSesClient(c.env);
-    const input: SendEmailCommandInput = {
-      Source: data.from,
-      Destination: {
-        ToAddresses: data.to,
-        CcAddresses: data.cc,
-        BccAddresses: data.bcc,
-      },
-      Message: {
-        Body: {
-          Text: {
-            Data: data.body.text,
+    const result = await sendEmail(
+      {
+        Source: data.from,
+        Destination: {
+          ToAddresses: data.to,
+          CcAddresses: data.cc,
+          BccAddresses: data.bcc,
+        },
+        Message: {
+          Body: {
+            Text: {
+              Data: data.body.text,
+            },
+            Html: {
+              Data: data.body.html,
+            },
           },
-          Html: {
-            Data: data.body.html,
+          Subject: {
+            Data: data.subject,
           },
         },
-        Subject: {
-          Data: data.subject,
-        },
+        ReplyToAddresses: data.replyToAddresses,
       },
-    };
-    const command = new SendEmailCommand(input);
-    await client.send(command);
+      c.env
+    );
 
-    return c.json({ message: 'ok' });
+    return c.json(result);
   }
 );

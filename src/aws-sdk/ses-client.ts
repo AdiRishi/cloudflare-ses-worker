@@ -1,5 +1,5 @@
-import { SESClient } from '@aws-sdk/client-ses';
-import { Env } from '~/index';
+import { SESClient, SendEmailCommand, type SendEmailCommandInput } from '@aws-sdk/client-ses';
+import { type Env } from '~/index';
 
 let sesClient: SESClient;
 
@@ -15,3 +15,8 @@ export const getSesClient = (env: Env) => {
   }
   return sesClient;
 };
+
+export async function sendEmail(input: SendEmailCommandInput, env: Env) {
+  const client = getSesClient(env);
+  return client.send(new SendEmailCommand(input));
+}
