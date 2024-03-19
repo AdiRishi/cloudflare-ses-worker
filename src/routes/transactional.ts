@@ -25,6 +25,12 @@ transactionalRouter.post(
         }),
       cc: z.array(z.string().email()).optional(),
       bcc: z.array(z.string().email()).optional(),
+      listManagementOptions: z
+        .object({
+          contactListName: z.string(),
+          topicName: z.string().optional(),
+        })
+        .optional(),
     })
   ),
   async (c) => {
@@ -32,26 +38,37 @@ transactionalRouter.post(
 
     const result = await sendEmail(
       {
-        Source: data.from,
+        FromEmailAddress: data.from,
         Destination: {
           ToAddresses: data.to,
           CcAddresses: data.cc,
           BccAddresses: data.bcc,
         },
-        Message: {
-          Body: {
-            Text: {
-              Data: data.body.text,
+        ReplyToAddresses: data.replyToAddresses,
+        Content: {
+          Simple: {
+            Subject: {
+              Charset: 'UTF-8',
+              Data: data.subject,
             },
-            Html: {
-              Data: data.body.html,
+            Body: {
+              Text: {
+                Charset: 'UTF-8',
+                Data: data.body.text,
+              },
+              Html: {
+                Charset: 'UTF-8',
+                Data: data.body.html,
+              },
             },
-          },
-          Subject: {
-            Data: data.subject,
           },
         },
-        ReplyToAddresses: data.replyToAddresses,
+        ListManagementOptions: data.listManagementOptions
+          ? {
+              ContactListName: data.listManagementOptions.contactListName,
+              TopicName: data.listManagementOptions.topicName,
+            }
+          : undefined,
       },
       c.env
     );

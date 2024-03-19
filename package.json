@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@8.15.4",
+  "packageManager": "pnpm@8.15.5",
   "scripts": {
     "build": "wrangler deploy --dry-run --minify --outdir dist",
     "dev": "wrangler dev --test-scheduled",
@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.535.0",
+    "@aws-sdk/client-sesv2": "^3.535.0",
     "@hono/zod-validator": "^0.2.0",
     "hono": "^4.1.0",
     "zod": "^3.22.4"
