@@ -20,5 +20,6 @@
     "paths": {
       "~/*": ["src/*"]
     }
-  }
+  },
+  "include": ["src", "tests", ".eslintrc.cjs", "vitest.config.ts", "vitest-env.d.ts"]
 }

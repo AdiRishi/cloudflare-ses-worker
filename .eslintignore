@@ -8,3 +8,4 @@ functions/*.js.*
 public
 dist
 coverage
+.eslintrc.cjs

@@ -1,18 +1,35 @@
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
   root: true,
-  extends: ['@repo/eslint-config/remix-run.js'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended-type-checked',
+    'plugin:@typescript-eslint/stylistic-type-checked',
+    'prettier',
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: true,
+  },
+  settings: {
+    'import/resolver': {
+      typescript: {
+        project: './tsconfig.json',
+      },
+    },
+  },
+  plugins: ['@typescript-eslint', 'prettier'],
+  ignorePatterns: ['.eslintrc.json'],
   rules: {
-    '@typescript-eslint/consistent-type-definitions': 'off',
-    '@typescript-eslint/consistent-indexed-object-style': 'off',
-    'react/prop-types': 'off',
-    '@typescript-eslint/no-misused-promises': [
+    'prettier/prettier': 'error',
+    '@typescript-eslint/no-unused-vars': [
       'error',
       {
-        checksVoidReturn: {
-          attributes: false,
-        },
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        destructuredArrayIgnorePattern: '^_',
       },
     ],
+    '@typescript-eslint/consistent-type-definitions': 'off',
   },
 };

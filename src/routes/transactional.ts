@@ -20,7 +20,7 @@ transactionalRouter.post(
           text: z.string().optional(),
           html: z.string().optional(),
         })
-        .refine((data) => data.text || data.html, {
+        .refine((data) => data.text ?? data.html, {
           message: "At least one of 'text' or 'html' must be provided",
         }),
       cc: z.array(z.string().email()).optional(),
